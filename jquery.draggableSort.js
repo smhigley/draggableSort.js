@@ -14,6 +14,14 @@
           pos_top = Math.floor(order/base.options.columns) * base.options.col_height;
       return {'top': pos_top, 'left': pos_left };
     }
+    
+    function setGridPos(el, order) {
+      var abs_pos = getPos(order);
+      TweenLite.set(el, {
+        'top': abs_pos.top + 'px',
+        'left': abs_pos.left + 'px'
+      });
+    }
 
     function animateToOrder(el, order) {
       var new_pos = getPos(order);
@@ -56,17 +64,31 @@
       active.dataset.order = target_order;
     }
 
+    function setParentHeight() {
+      var height = Math.ceil(base.selection.length/base.options.columns) * base.options.col_height;
+      console.log(height);
+      //base.$el.parent.height(height);
+    }
+
     // initialize
     base.init = function(){
 
       base.options = $.extend({},$.draggableSort.defaultOptions, options);
+      
+      setGridPos(base.el, el.dataset.order);
+      //setParentHeight();
 
       var overlapThreshold = "50%";
 
+      // destroy any previous draggables on base.el
+      var cur_draggable = Draggable.get(base.el);
+      if(cur_draggable) cur_draggable.kill();
+      
+      // set up draggable instance
       Draggable.create(base.el, {
         type: "top,left",
-        trigger: base.$el.find('.drag-trigger'),
-        bounds: base.$el.parent('.section-inner'),
+        trigger: base.$el.find(base.options.trigger),
+        bounds: base.$el.parent(base.options.bounds),
         edgeResistance:0.5,
         onDrag: function(e) {
           var i = base.selection.length;
@@ -79,6 +101,7 @@
         onDragEnd:function(e) {
           var el = this.target;
           animateToOrder(el, el.dataset.order);
+          base.options.on_drop();
         }
       });
 
@@ -92,11 +115,14 @@
     trigger: '.drag-trigger',
     columns: 4,
     col_width: 200,
-    col_height: 100
+    col_height: 100,
+    on_drop: function() {}
   };
 
   $.fn.draggableSort = function(options){
     var selection = this;
+    $(this).parent(options.bounds).height(Math.ceil(this.length/options.columns) * options.col_height);
+
     return this.each(function(){
       (new $.draggableSort(this, selection, options));
     });
