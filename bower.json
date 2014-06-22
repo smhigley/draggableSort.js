@@ -1,0 +1,22 @@
+{
+  "name": "draggableSort.js",
+  "description": "A simple plugin to sort items by dragging. Requires jQuery and GSAP's TweenMax and Draggable. It stores the order in a data-order attribute.",
+  "main": "jquery.draggableSort.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/smhigley/draggableSort.js",
+  "authors": [
+    "Sarah Higley"
+  ],
+  "license": "",
+  "dependencies": {
+    "jquery": ">= 1.2.0",
+    "gsap": ">= 1.11.0"
+  },
+  "keywords": [
+    "gsap",
+    "draggable",
+    "sort",
+    "jquery",
+    "plugin"
+  ]
+}
